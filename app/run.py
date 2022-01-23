@@ -47,27 +47,13 @@ def index():
     category_counts = (df.iloc[:,4:] == 1).sum().values
     category_names = df.iloc[:,4:].columns
     
+    # graph 2
+    top_category_news_count = df[df['genre'] == 'news'].iloc[:,4:].sum().sort_values(ascending=False)[0:10]
+    top_category_news_names = list(top_category_news_count.index)
+    
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
-        {
-            'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
-                )
-            ],
-
-            'layout': {
-                'title': 'Distribution of Message Genres',
-                'yaxis': {
-                    'title': "Count"
-                },
-                'xaxis': {
-                    'title': "Genre"
-                }
-            }
-        },
         
         # graph 1
         {
@@ -86,6 +72,29 @@ def index():
                 'xaxis': {
                     'title': "Category",
                     'tickangle': 45,
+                    'categoryorder':'total descending'
+                }
+            }
+        },
+        
+        # graph 2
+        {
+            'data': [
+                Bar(
+                    x=top_category_news_names,
+                    y=top_category_news_count
+                )
+            ],
+
+            'layout': {
+                'barmode': 'stack',
+                'title': 'Top 10 Categories in News',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': 35,
                     'categoryorder':'total descending'
                 }
             }
