@@ -56,8 +56,6 @@ def tokenize(text):
     for tok in tokens:
         if tok in stopwords.words("english"):
             continue
-            
-        tok = PorterStemmer().stem(tok)
         
         tok = lemmatizer.lemmatize(tok).lower().strip()
 
