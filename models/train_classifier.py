@@ -36,6 +36,17 @@ from sklearn.base import BaseEstimator,TransformerMixin
 
 def load_data(database_filepath):
     
+    """
+    Load data from the dabase function.
+    Arguments:
+        database_filepath -> path to SQLite database
+    
+    Output:
+        X -> dataframe containing features
+        y -> dataframe containing labels
+        category_names -> list of category names
+    """
+    
     engine = create_engine('sqlite:///' + database_filepath)
     table_name = 'MessagesCategories'
     df = pd.read_sql_table(table_name, engine)
@@ -49,6 +60,15 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    
+    """
+    Tokenize and process text data function.
+    
+    Arguments:
+        text -> text messages
+    Output:
+        clean_tokens -> list of clean tokens
+    """
     
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
@@ -66,6 +86,12 @@ def tokenize(text):
 
 
 def build_model():
+    
+    """
+    Build ML pipeline with SVM classifier GridSearch function.
+    Output:
+        GridSearch output.
+    """
     
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
@@ -95,6 +121,15 @@ def build_model():
 
 def evaluate_model(model, X_test, Y_test, category_names):
     
+    """
+    Evaluate model function.
+    Arguments:
+        model -> sklearn model
+        X_test -> Features for the test set
+        Y_test -> Labels for the test set
+        category_names -> list of category names
+    """
+    
     Y_pred = model.predict(X_test)
     
     for ix, col in enumerate(category_names):
@@ -108,6 +143,16 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    
+    """
+    Save model function.
+    
+    This function saves trained model as Pickle file.
+    
+    Arguments:
+        model -> sklearn pipeline object
+        model_filepath -> destination path to save .pkl file
+    """
     
     pickle.dump(model, open(model_filepath, 'wb'))
 

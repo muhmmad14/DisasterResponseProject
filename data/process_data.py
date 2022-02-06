@@ -5,6 +5,17 @@ from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
     
+    '''
+    Load messages and categories datasets and merge using common id function.
+
+    Parameters:
+        messages_filepath: csv path of file containing messages.
+        categories_filepath: csv path of file containing categories.
+
+    Returns:
+        df: combined dataset of messages and categories.   
+    '''
+    
     # loading datasets
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv (categories_filepath)
@@ -16,6 +27,14 @@ def load_data(messages_filepath, categories_filepath):
 
 
 def clean_data(df):
+    
+    """
+    Clean categories data function.
+    Arguments:
+        df -> combined dataset of messages and categories
+    Output:
+        df -> combined dataset of messages and categories cleaned
+    """
     
     # spliting the categories to columns
     categories_split = df['categories'].str.split(pat = ';', expand = True)
@@ -44,11 +63,26 @@ def clean_data(df):
 
 def save_data(df, database_filename):
     
+    """
+    Save the clean dataset into an sqlite database function.
+    Arguments:
+        df -> combined dataset of messages and categories cleaned
+        database_filename -> path to SQLite database
+    """ 
+    
     engine = create_engine('sqlite:///'+ str (database_filename))
     df.to_sql('MessagesCategories', engine, index=False, if_exists = 'replace')
 
 
 def main():
+    
+    """
+    Main function that execute the data processing functions. There are three primary actions taken by this function:
+        1) Load messages and categories datasets and merge them
+        2) Clean categories data
+        3) Save the clean dataset into an sqlite database function
+    """
+    
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
